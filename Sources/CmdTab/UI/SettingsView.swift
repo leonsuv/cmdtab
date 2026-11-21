@@ -60,7 +60,7 @@ struct SettingsView: View {
             Divider()
             detailContent
         }
-        .frame(minWidth: 760, minHeight: 560)
+        .frame(minWidth: 860, minHeight: 580)
         .onAppear {
             if ui.selectedShortcutID == nil {
                 ui.selectedShortcutID = settings.payload.shortcuts.first?.id
@@ -92,7 +92,7 @@ struct SettingsView: View {
             )
             .padding(.top, 36)
 
-            VStack(spacing: 3) {
+            VStack(spacing: 4) {
                 ForEach(filteredSections) { section in
                     Button {
                         ui.selectedSection = section
@@ -103,15 +103,18 @@ struct SettingsView: View {
                                 .frame(width: 20)
                             Text(section.title)
                                 .font(.system(size: 13, weight: ui.selectedSection == section ? .semibold : .regular))
-                            Spacer()
+                                .lineLimit(1)
+                            Spacer(minLength: 0)
                         }
                         .padding(.horizontal, 10)
-                        .padding(.vertical, 8)
+                        .padding(.vertical, 9)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .background(
                             RoundedRectangle(cornerRadius: 8, style: .continuous)
                                 .fill(ui.selectedSection == section ? Color.accentColor.opacity(0.22) : Color.clear)
                         )
                         .foregroundStyle(ui.selectedSection == section ? Color.accentColor : Color.primary)
+                        .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
                 }
@@ -126,12 +129,13 @@ struct SettingsView: View {
                     Label(L10n.t("Wechsler testen", "Test Switcher"), systemImage: "macwindow.on.rectangle")
                         .font(.system(size: 12, weight: .semibold))
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 7)
+                        .padding(.vertical, 8)
                         .background(
                             RoundedRectangle(cornerRadius: 9, style: .continuous)
                                 .fill(LinearGradient(colors: [Color.accentColor, Color.purple.opacity(0.85)], startPoint: .leading, endPoint: .trailing))
                         )
                         .foregroundStyle(.white)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
 
@@ -141,11 +145,12 @@ struct SettingsView: View {
                     Text(L10n.t("CmdTab beenden", "Quit CmdTab"))
                         .font(.system(size: 12, weight: .medium))
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 6)
+                        .padding(.vertical, 7)
                         .background(
                             RoundedRectangle(cornerRadius: 8, style: .continuous)
                                 .fill(Color.primary.opacity(0.08))
                         )
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
             }
@@ -338,6 +343,7 @@ struct SettingsView: View {
                     .foregroundStyle(isSelected ? Color.accentColor : Color.primary)
             }
             .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
     }
@@ -376,11 +382,13 @@ struct SettingsView: View {
                             }
                             .padding(.horizontal, 10)
                             .padding(.vertical, 8)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .background(
                                 RoundedRectangle(cornerRadius: 8, style: .continuous)
                                     .fill(isSel ? Color.accentColor : Color.primary.opacity(0.05))
                             )
                             .foregroundStyle(isSel ? .white : .primary)
+                            .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
                     }
@@ -448,16 +456,24 @@ struct SettingsView: View {
 
             HStack(spacing: 8) {
                 Text(L10n.t("Auslöser:", "Trigger:"))
-                    .font(.system(size: 12, weight: .medium))
-                Spacer()
-                Text(L10n.t("Halten", "Hold"))
-                    .font(.system(size: 12))
-                    .foregroundStyle(.secondary)
-                ModifierPickerButton(modifiers: binding.holdModifiers, state: ui.modifierRecorderState)
-                Text(L10n.t("und drücken", "and press"))
-                    .font(.system(size: 12))
-                    .foregroundStyle(.secondary)
-                TriggerKeyRecorderButton(keyCode: binding.triggerKeyCode, state: ui.triggerKeyRecorderState)
+                    .font(.system(size: 13, weight: .medium))
+                    .lineLimit(1)
+                    .fixedSize(horizontal: true, vertical: false)
+                Spacer(minLength: 8)
+                HStack(spacing: 8) {
+                    Text(L10n.t("Halten", "Hold"))
+                        .font(.system(size: 12))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
+                    ModifierPickerButton(modifiers: binding.holdModifiers, state: ui.modifierRecorderState)
+                    Text(L10n.t("und drücken", "and press"))
+                        .font(.system(size: 12))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
+                    TriggerKeyRecorderButton(keyCode: binding.triggerKeyCode, state: ui.triggerKeyRecorderState)
+                }
             }
 
             Picker("", selection: $ui.shortcutSubTab) {
@@ -625,11 +641,13 @@ struct SettingsView: View {
                                     }
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 6)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                                     .background(
                                         RoundedRectangle(cornerRadius: 8, style: .continuous)
                                             .fill(isSel ? Color.accentColor : Color.clear)
                                     )
                                     .foregroundStyle(isSel ? .white : .primary)
+                                    .contentShape(Rectangle())
                                 }
                                 .buttonStyle(.plain)
                             }
@@ -780,10 +798,12 @@ struct SettingsView: View {
     }
 
     private func labeledRow<Control: View>(_ label: String, @ViewBuilder control: () -> Control) -> some View {
-        HStack {
+        HStack(spacing: 12) {
             Text(label)
                 .font(.system(size: 13))
-            Spacer()
+                .lineLimit(1)
+                .layoutPriority(1)
+            Spacer(minLength: 8)
             control()
         }
     }

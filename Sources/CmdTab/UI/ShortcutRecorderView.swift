@@ -35,7 +35,9 @@ struct ModifierPickerButton: View {
         } label: {
             Text(state.isRecording ? L10n.t("Modifier drücken…", "Press modifier…") : (modifiers.isEmpty ? "—" : modifiers.displaySymbols))
                 .font(.system(size: 13, weight: .semibold))
-                .frame(minWidth: 74)
+                .lineLimit(1)
+                .fixedSize(horizontal: true, vertical: false)
+                .frame(minWidth: 56)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 5)
                 .background(
@@ -46,6 +48,7 @@ struct ModifierPickerButton: View {
                                 .strokeBorder(state.isRecording ? Color.accentColor : Color.primary.opacity(0.15), lineWidth: 1)
                         )
                 )
+                .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .onDisappear { state.stop() }
@@ -89,7 +92,9 @@ struct TriggerKeyRecorderButton: View {
         } label: {
             Text(state.isRecording ? L10n.t("Taste drücken…", "Press key…") : KeyCodeTranslator.symbol(for: keyCode))
                 .font(.system(size: 13, weight: .semibold))
-                .frame(minWidth: 74)
+                .lineLimit(1)
+                .fixedSize(horizontal: true, vertical: false)
+                .frame(minWidth: 56)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 5)
                 .background(
@@ -100,6 +105,7 @@ struct TriggerKeyRecorderButton: View {
                                 .strokeBorder(state.isRecording ? Color.accentColor : Color.primary.opacity(0.15), lineWidth: 1)
                         )
                 )
+                .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .onDisappear { state.stop() }

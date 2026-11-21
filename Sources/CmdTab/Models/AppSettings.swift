@@ -359,9 +359,16 @@ final class AppSettings: ObservableObject {
 
     private init() {
         if let data = UserDefaults.standard.data(forKey: storageKey),
-           let decoded = try? JSONDecoder().decode(SettingsPayload.self, from: data) {
+           var decoded = try? JSONDecoder().decode(SettingsPayload.self, from: data) {
+            let migrationKey = "dev.cmdtab.migrated.previewDefaultOff.v1"
+            if !UserDefaults.standard.bool(forKey: migrationKey) {
+                decoded.showLivePreview = false
+                UserDefaults.standard.set(true, forKey: migrationKey)
+            }
             self.payload = decoded
+            save()
         } else {
+            UserDefaults.standard.set(true, forKey: "dev.cmdtab.migrated.previewDefaultOff.v1")
             self.payload = SettingsPayload()
         }
     }
