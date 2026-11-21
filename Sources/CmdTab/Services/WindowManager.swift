@@ -458,16 +458,22 @@ final class WindowManager {
         mruTimestamps[window.id] = now
         mruTimestamps["app::\(window.pid)"] = now
 
+        if window.pid == ProcessInfo.processInfo.processIdentifier {
+            SettingsWindowController.shared.show()
+            return
+        }
+
         guard let app = NSRunningApplication(processIdentifier: window.pid) else { return }
 
         if app.isHidden {
             app.unhide()
         }
 
+        let axApp = AXUIElementCreateApplication(window.pid)
+
         // Resolve AX window (or fall back to the app's first minimized/standard window)
         var targetAXWin = window.axWindow
         if targetAXWin == nil {
-            let axApp = AXUIElementCreateApplication(window.pid)
             var windowsRef: CFTypeRef?
             if AXUIElementCopyAttributeValue(axApp, kAXWindowsAttribute as CFString, &windowsRef) == .success,
                let axWindows = windowsRef as? [AXUIElement] {
@@ -484,26 +490,32 @@ final class WindowManager {
         }
 
         // Always unminimize & raise the target window
+        var wasMinimized = window.isMinimized
         if let axWin = targetAXWin {
-            let wasMinimized = window.isMinimized || (axBool(axWin, kAXMinimizedAttribute) == true)
+            if axBool(axWin, kAXMinimizedAttribute) == true {
+                wasMinimized = true
+            }
             if wasMinimized {
                 AXUIElementSetAttributeValue(axWin, kAXMinimizedAttribute as CFString, kCFBooleanFalse)
             }
             AXUIElementPerformAction(axWin, kAXRaiseAction as CFString)
             AXUIElementSetAttributeValue(axWin, kAXMainAttribute as CFString, kCFBooleanTrue)
             AXUIElementSetAttributeValue(axWin, kAXFocusedAttribute as CFString, kCFBooleanTrue)
-
-            if wasMinimized {
-                // Follow-up raise after macOS finishes unminimizing from the Dock
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
-                    AXUIElementPerformAction(axWin, kAXRaiseAction as CFString)
-                    AXUIElementSetAttributeValue(axWin, kAXMainAttribute as CFString, kCFBooleanTrue)
-                    app.activate()
-                }
-            }
         }
 
-        app.activate()
+        // Force-activate the target application even when CmdTab is a non-activating overlay panel
+        AXUIElementSetAttributeValue(axApp, kAXFrontmostAttribute as CFString, kCFBooleanTrue)
+        _ = app.activate(options: [.activateIgnoringOtherApps])
+
+        if wasMinimized, let axWin = targetAXWin {
+            // Follow-up raise after macOS finishes unminimizing from the Dock
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.14) {
+                AXUIElementPerformAction(axWin, kAXRaiseAction as CFString)
+                AXUIElementSetAttributeValue(axWin, kAXMainAttribute as CFString, kCFBooleanTrue)
+                AXUIElementSetAttributeValue(axApp, kAXFrontmostAttribute as CFString, kCFBooleanTrue)
+                _ = app.activate(options: [.activateIgnoringOtherApps])
+            }
+        }
     }
 
     func close(_ window: WindowInfo) {
