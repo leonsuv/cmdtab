@@ -70,7 +70,7 @@ CmdTab includes full native `.lproj` localizations and live in-app language swit
 
 ### Download Release
 
-1. Download the latest `CmdTab-v1.0.0-macOS-arm64.zip` from [Releases](../../releases/latest).
+1. Download the latest `CmdTab-v1.0.1-macOS-arm64.zip` from [Releases](../../releases/latest).
 2. Unzip and move `CmdTab.app` into `/Applications`.
 3. Launch `CmdTab.app` and grant **Accessibility** (for global shortcuts &amp; window management) and **Screen Recording** (for live thumbnails) in **System Settings → Privacy &amp; Security**.
 
