@@ -5,7 +5,7 @@
 <h1 align="center">CmdTab</h1>
 
 <p align="center">
-  A fast, native macOS window switcher built from scratch in Swift, SwiftUI, AppKit &amp; ScreenCaptureKit — switch between <strong>every window</strong> (not just apps) with live previews, instant fuzzy search, quick-jump numbers, window pinning, snapping, per-app exceptions, and <strong>25 languages</strong>.
+  A fast, native macOS <strong>Window Switcher &amp; Window Manager</strong> built from scratch in Swift, SwiftUI, AppKit &amp; ScreenCaptureKit — replacing both AltTab and Rectangle in one zero-dependency app with live previews, instant fuzzy search, drag-to-edge snapping, 23 global tiling shortcuts, per-app exceptions, and <strong>25 languages</strong>.
 </p>
 
 <p align="center">
@@ -19,28 +19,31 @@
 
 ![CmdTab Window Switcher with Live Thumbnails, Hover Actions, Quick-Jump Numbers and Status Badges](docs/hero-switcher.png)
 
-macOS's built-in `⌘ + Tab` only switches between applications, leaving minimized windows, hidden apps, and multiple windows of the same app hard to reach. **CmdTab** replaces it with a blazing-fast, zero-dependency native Swift switcher packed with power features — completely free and open source.
+macOS's built-in `⌘ + Tab` only switches between applications, and native window tiling lacks customizable shortcuts, thirds, quarters, gaps, and multi-display controls. **CmdTab** combines a blazing-fast window switcher with a full Rectangle-class window manager — completely free and open source.
 
 ## Highlights
 
 - **Every Window, Not Just Every App.** Displays normal, minimized, hidden, fullscreen, and other-Space windows with clear status badges (`Space 2`, `Minimized`, `Hidden`, `Fullscreen`), and automatically unminimizes windows when switching to them.
 - **3 Visual Styles &amp; Auto-Sizing Grid.** Choose between **Thumbnails** (live previews via `ScreenCaptureKit`), **App Icons** (Dock-like bar), and **Titles** (compact list). Size modes include `Small`, `Medium`, `Large`, and **`Auto`** — large previews when 2–4 windows are open, compact grid when 10+ windows are open.
-- **Native Light, Dark &amp; System Themes.** Translucent macOS glass (`NSVisualEffectView`) with optional full-size window preview behind the switcher.
+- **Full Rectangle-Class Window Snapping (v2.0).**
+  - **23 Global Snapping Shortcuts** — Halves, Quarters, Thirds, Two-Thirds, Maximize, Almost Maximize, Maximize Height, Smaller/Larger, Center, **Restore original size**, and Next/Previous Display.
+  - **Drag-to-Screen-Edge Snap Areas** — Drag any window to any of 8 configurable edges/corners with a smooth translucent glass **Snap Footprint** preview, optional **haptic feedback**, and **automatic unsnap/restore** when dragging a snapped window away.
+  - **Fine-Grained Controls** — Configurable window gaps (`0–32 px`), repeated command cycling (`1/2 → 2/3 → 1/3` or move across displays), cursor warping across monitors, double-click titlebar to maximize/restore, and Stage Manager left margin.
 - **Live Fuzzy Search.** Press `Space` or `/` (or trigger `⌥ + Tab`) to fuzzy-filter across window titles and app names with highlighted character matches and live match counts.
-- **Multiple Independent Shortcuts.** Configure as many shortcuts as you like — default presets include `⌘ + Tab` (All Windows), `⌥ + \`` (Active App Only), and `⌥ + Tab` (Instant Window Search) — each with its own Space/Screen/App filters, sort order, grouping, style override, and release behavior (`Focus`, `Hold`, `Search`).
-- **Power Extras Built In.**
-  - **Quick-Jump (`1–9`)**: Press any number `1–9` to jump straight to that window.
-  - **Window Pinning (`P`)**: Pin favorite windows so they always stay first.
-  - **Window Snapping (`[` / `]` / `\`)**: Snap the highlighted window to Left Half, Right Half, or Maximize right from the switcher.
-  - **Hover &amp; Keyboard Window Actions**: Close (`W`), Minimize (`M`), Toggle Fullscreen (`F`), Hide App (`H`), Quit App (`Q`).
-  - **Per-App Exceptions**: Hide specific apps or ignore shortcuts inside VMs and Remote Desktop apps (Finder, Screen Sharing, RDP, Parallels, VirtualBox, TeamViewer, Citrix pre-configured).
-  - **Settings Backup**: Export and import your complete configuration as JSON.
+- **Multiple Independent Switcher Shortcuts.** Default presets include `⌘ + Tab` (All Windows), `⌥ + \`` (Active App Only), and `⌥ + Tab` (Instant Window Search) — each with its own Space/Screen/App filters, sort order, grouping, style override, and release behavior (`Focus`, `Hold`, `Search`).
+- **Power Extras Built In.** Quick-Jump (`1–9`), Window Pinning (`P`), Hover &amp; Keyboard Actions (`W`, `M`, `F`, `H`, `Q`), Per-App Exceptions (Finder, Screen Sharing, RDP, Parallels, VirtualBox, TeamViewer, Citrix), and JSON Settings Export/Import.
 
-| Live Fuzzy Search | Native macOS Settings |
+| Window Snapping &amp; Drag-to-Edge Footprint | Live Fuzzy Search |
 |---|---|
-| ![Live Fuzzy Search](docs/switcher-search.png) | ![CmdTab Settings](docs/settings-appearance.png) |
+| ![Window Snapping](docs/window-snapping.png) | ![Live Fuzzy Search](docs/switcher-search.png) |
 
-## Keyboard Shortcuts (While Switcher Is Open)
+<p align="center">
+  <img src="docs/settings-appearance.png" width="760" alt="CmdTab Native macOS Settings">
+</p>
+
+## Keyboard Shortcuts
+
+### Window Switcher
 
 | Key | Action |
 |---|---|
@@ -52,13 +55,23 @@ macOS's built-in `⌘ + Tab` only switches between applications, leaving minimiz
 | `↑` `↓` `←` `→` | Navigate grid or list |
 | `↩` | Focus (and unminimize) selected window |
 | `⎋` | Cancel without switching |
-| `W` | Close selected window |
-| `M` | Minimize / restore window |
-| `F` | Toggle fullscreen |
-| `H` | Hide / unhide app |
-| `Q` | Quit app of selected window |
+| `W` / `M` / `F` / `H` / `Q` | Close / Minimize / Fullscreen / Hide App / Quit App |
 | `P` | Pin / unpin window to the front |
-| `[` / `]` / `\` | Snap window Left Half / Right Half / Maximize |
+| `[` / `]` / `\` | Snap selected window Left / Right / Maximize |
+
+### Global Window Snapping (Customizable)
+
+| Key | Action |
+|---|---|
+| `⌃ ⌥ ←` / `⌃ ⌥ →` | Left Half / Right Half (repeat cycles `1/2 → 2/3 → 1/3`) |
+| `⌃ ⌥ ↑` / `⌃ ⌥ ↓` | Top Half / Bottom Half |
+| `⌃ ⌥ U` / `I` / `J` / `K` | Top Left / Top Right / Bottom Left / Bottom Right |
+| `⌃ ⌥ D` / `F` / `G` | First Third / Center Third / Last Third |
+| `⌃ ⌥ E` / `T` | First Two Thirds / Last Two Thirds |
+| `⌃ ⌥ ↩` / `⌃ ⌥ ⇧ ↑` | Maximize / Maximize Height |
+| `⌃ ⌥ -` / `⌃ ⌥ =` | Make Smaller / Make Larger |
+| `⌃ ⌥ C` / `⌃ ⌥ ⌫` | Center / Restore Original Size |
+| `⌃ ⌥ ⌘ ←` / `⌃ ⌥ ⌘ →` | Previous Display / Next Display |
 
 ## Languages (25)
 
@@ -70,9 +83,9 @@ CmdTab includes full native `.lproj` localizations and live in-app language swit
 
 ### Download Release
 
-1. Download the latest `CmdTab-v1.0.2-macOS-arm64.zip` from [Releases](../../releases/latest).
+1. Download the latest `CmdTab-v2.0.0-macOS-arm64.zip` from [Releases](../../releases/latest).
 2. Unzip and move `CmdTab.app` into `/Applications`.
-3. Launch `CmdTab.app` and grant **Accessibility** (for global shortcuts &amp; window management) and **Screen Recording** (for live thumbnails) in **System Settings → Privacy &amp; Security**.
+3. Launch `CmdTab.app` and grant **Accessibility** (for global shortcuts, window switching &amp; snapping) and **Screen Recording** (for live thumbnails) in **System Settings → Privacy &amp; Security**.
 
 ### Build from Source
 

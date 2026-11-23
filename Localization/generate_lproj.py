@@ -4,12 +4,17 @@ import os
 from pathlib import Path
 from translations_part1 import TRANSLATIONS_PART1
 from translations_part2 import TRANSLATIONS_PART2
+from translations_snapping import SNAPPING_STRINGS
 
 ROOT = Path(__file__).resolve().parent
 
 ALL_LANGS = {}
 ALL_LANGS.update(TRANSLATIONS_PART1)
 ALL_LANGS.update(TRANSLATIONS_PART2)
+for code, extras in SNAPPING_STRINGS.items():
+    if code in ALL_LANGS:
+        ALL_LANGS[code] = dict(ALL_LANGS[code])
+        ALL_LANGS[code].update(extras)
 
 def escape_strings_val(s: str) -> str:
     return (

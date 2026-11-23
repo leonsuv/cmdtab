@@ -6,6 +6,7 @@ import UniformTypeIdentifiers
 enum SettingsSection: String, CaseIterable, Identifiable {
     case appearance
     case controls
+    case snapping
     case general
     case exceptions
     case extras
@@ -16,6 +17,7 @@ enum SettingsSection: String, CaseIterable, Identifiable {
         switch self {
         case .appearance: return "paintpalette"
         case .controls: return "command"
+        case .snapping: return "rectangle.split.2x2"
         case .general: return "gearshape"
         case .exceptions: return "hand.raised"
         case .extras: return "sparkles"
@@ -27,6 +29,7 @@ enum SettingsSection: String, CaseIterable, Identifiable {
         switch self {
         case .appearance: return L10n.t("Darstellung", "Appearance")
         case .controls: return L10n.t("Steuerung", "Controls")
+        case .snapping: return L10n.t("Fenster-Snapping", "Window Snapping")
         case .general: return L10n.t("Allgemein", "General")
         case .exceptions: return L10n.t("Ausnahmen", "Exceptions")
         case .extras: return L10n.t("Extras & Tipps", "Extras & Tips")
@@ -193,6 +196,8 @@ struct SettingsView: View {
                     appearanceSection
                 case .controls:
                     controlsSection
+                case .snapping:
+                    SnappingSettingsView()
                 case .general:
                     generalSection
                 case .exceptions:

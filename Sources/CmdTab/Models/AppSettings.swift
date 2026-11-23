@@ -275,6 +275,37 @@ struct SettingsPayload: Codable {
     // Pinned window keys (bundleID::title)
     var pinnedWindowKeys: [String] = []
 
+    // Rectangle-style Window Snapping
+    var snapping: WindowSnappingSettings = WindowSnappingSettings()
+
+    init() {}
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        style = try c.decodeIfPresent(SwitcherStyle.self, forKey: .style) ?? .thumbnails
+        size = try c.decodeIfPresent(SwitcherSize.self, forKey: .size) ?? .auto
+        appearance = try c.decodeIfPresent(AppearanceMode.self, forKey: .appearance) ?? .system
+        releaseBehavior = try c.decodeIfPresent(ReleaseBehavior.self, forKey: .releaseBehavior) ?? .focus
+        showLivePreview = try c.decodeIfPresent(Bool.self, forKey: .showLivePreview) ?? false
+        displayScreen = try c.decodeIfPresent(ScreenDisplayMode.self, forKey: .displayScreen) ?? .activeScreen
+        enableAnimations = try c.decodeIfPresent(Bool.self, forKey: .enableAnimations) ?? true
+        showStatusBadges = try c.decodeIfPresent(Bool.self, forKey: .showStatusBadges) ?? true
+        showQuickJumpNumbers = try c.decodeIfPresent(Bool.self, forKey: .showQuickJumpNumbers) ?? true
+        showHoverWindowActions = try c.decodeIfPresent(Bool.self, forKey: .showHoverWindowActions) ?? true
+        showWindowSnappingActions = try c.decodeIfPresent(Bool.self, forKey: .showWindowSnappingActions) ?? true
+        fadeDelayMs = try c.decodeIfPresent(Int.self, forKey: .fadeDelayMs) ?? 80
+        maxWidthPercent = try c.decodeIfPresent(Double.self, forKey: .maxWidthPercent) ?? 85
+        maxHeightPercent = try c.decodeIfPresent(Double.self, forKey: .maxHeightPercent) ?? 78
+        shortcuts = try c.decodeIfPresent([ShortcutConfig].self, forKey: .shortcuts) ?? Self.defaultShortcuts()
+        launchAtLogin = try c.decodeIfPresent(Bool.self, forKey: .launchAtLogin) ?? false
+        showMenuBarIcon = try c.decodeIfPresent(Bool.self, forKey: .showMenuBarIcon) ?? true
+        backgroundCapture = try c.decodeIfPresent(Bool.self, forKey: .backgroundCapture) ?? true
+        language = try c.decodeIfPresent(AppLanguage.self, forKey: .language) ?? .system
+        exceptions = try c.decodeIfPresent([AppException].self, forKey: .exceptions) ?? Self.defaultExceptions()
+        pinnedWindowKeys = try c.decodeIfPresent([String].self, forKey: .pinnedWindowKeys) ?? []
+        snapping = try c.decodeIfPresent(WindowSnappingSettings.self, forKey: .snapping) ?? WindowSnappingSettings()
+    }
+
     static func defaultShortcuts() -> [ShortcutConfig] {
         [
             ShortcutConfig(
@@ -437,6 +468,17 @@ enum KeyCodeTranslator {
         case kVK_Delete: return "⌫"
         case kVK_ANSI_Grave: return "`"
         case kVK_ISO_Section: return "§"
+        case kVK_ANSI_Minus: return "-"
+        case kVK_ANSI_Equal: return "="
+        case kVK_ANSI_LeftBracket: return "["
+        case kVK_ANSI_RightBracket: return "]"
+        case kVK_ANSI_Backslash: return "\\"
+        case kVK_ANSI_Semicolon: return ";"
+        case kVK_ANSI_Quote: return "'"
+        case kVK_ANSI_Comma: return ","
+        case kVK_ANSI_Period: return "."
+        case kVK_ANSI_Slash: return "/"
+        case kVK_ForwardDelete: return "⌦"
         case kVK_UpArrow: return "↑"
         case kVK_DownArrow: return "↓"
         case kVK_LeftArrow: return "←"

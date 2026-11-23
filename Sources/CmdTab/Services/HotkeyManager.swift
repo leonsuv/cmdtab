@@ -269,6 +269,23 @@ final class HotkeyManager: ObservableObject {
             }
         }
 
+        // 3. Check global Rectangle-style Window Snapping shortcuts
+        let snapping = AppSettings.shared.payload.snapping
+        if snapping.isEnabled && !currentModifiers.isEmpty {
+            for (rawAction, combo) in snapping.shortcuts {
+                guard combo.keyCode == keyCode,
+                      combo.modifiers == currentModifiers,
+                      let action = SnapAction(rawValue: rawAction) else {
+                    continue
+                }
+                if WindowManager.shared.shouldIgnoreShortcutsForFrontmostApp() {
+                    return Unmanaged.passUnretained(event)
+                }
+                WindowSnapManager.shared.execute(action)
+                return nil
+            }
+        }
+
         return Unmanaged.passUnretained(event)
     }
 

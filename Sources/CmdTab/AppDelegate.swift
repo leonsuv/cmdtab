@@ -17,9 +17,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         setupMenuBar()
         observeSettingsAndPermissions()
 
-        // Try starting global hotkey event tap immediately
+        // Try starting global hotkey event tap & drag-to-snap monitor immediately
         if PermissionsManager.shared.hasAccessibility {
             _ = HotkeyManager.shared.start()
+            WindowSnapManager.shared.startMonitoring()
         } else {
             PermissionsManager.shared.startPolling(interval: 1.5)
         }
@@ -34,6 +35,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillTerminate(_ notification: Notification) {
         HotkeyManager.shared.stop()
+        WindowSnapManager.shared.stopMonitoring()
         ScreenCaptureService.shared.stopBackgroundCapture()
         PermissionsManager.shared.stopPolling()
     }
@@ -150,6 +152,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     if !HotkeyManager.shared.isRunning {
                         _ = HotkeyManager.shared.start()
                     }
+                    WindowSnapManager.shared.startMonitoring()
                     if PermissionsManager.shared.hasScreenRecording {
                         PermissionsManager.shared.stopPolling()
                     }
