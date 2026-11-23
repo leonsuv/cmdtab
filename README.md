@@ -38,7 +38,7 @@ macOS's built-in `⌘ + Tab` only switches between applications, and native wind
 | ![Window Snapping](docs/window-snapping.png) | ![Live Fuzzy Search](docs/switcher-search.png) |
 
 <p align="center">
-  <img src="docs/settings-appearance.png" width="760" alt="CmdTab Native macOS Settings">
+  <img src="docs/v2.0-settings.png" width="760" alt="CmdTab v2.0 Native macOS Settings">
 </p>
 
 ## Keyboard Shortcuts
